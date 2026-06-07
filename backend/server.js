@@ -17,6 +17,22 @@ app.use(express.json());
 
 let db;
 
+// Middleware to ensure DB connection is initialized for serverless environments
+app.use(async (req, res, next) => {
+  if (req.path.startsWith('/api') || req.path === '/health') {
+    if (!db) {
+      try {
+        db = await initDb();
+        console.log('Database connection initialized successfully');
+      } catch (err) {
+        console.error('Failed to initialize database connection:', err);
+        return res.status(500).json({ message: 'Database connection failed' });
+      }
+    }
+  }
+  next();
+});
+
 // Route handler for root status
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Attendance API is running' });
@@ -334,14 +350,18 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
 });
 
-// Init DB and Start Server
-initDb().then(database => {
-  db = database;
-  console.log('Database initialized successfully');
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Init DB and Start Server for standard environments
+if (!process.env.VERCEL) {
+  initDb().then(database => {
+    db = database;
+    console.log('Database initialized successfully');
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  }).catch(err => {
+    console.error('Failed to initialize database:', err);
+    process.exit(1);
   });
-}).catch(err => {
-  console.error('Failed to initialize database:', err);
-  process.exit(1);
-});
+}
+
+module.exports = app;

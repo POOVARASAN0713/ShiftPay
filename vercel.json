@@ -1,0 +1,37 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/health",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/assets/:path*",
+      "destination": "/frontend/dist/assets/:path*"
+    },
+    {
+      "source": "/manifest.json",
+      "destination": "/frontend/dist/manifest.json"
+    },
+    {
+      "source": "/sw.js",
+      "destination": "/frontend/dist/sw.js"
+    },
+    {
+      "source": "/favicon.svg",
+      "destination": "/frontend/dist/favicon.svg"
+    },
+    {
+      "source": "/icons.svg",
+      "destination": "/frontend/dist/icons.svg"
+    },
+    {
+      "source": "/((?!api|health).*)",
+      "destination": "/frontend/dist/index.html"
+    }
+  ]
+}
