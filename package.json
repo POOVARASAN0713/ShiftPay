@@ -1,0 +1,19 @@
+{
+  "name": "attendance-salary-app",
+  "version": "1.0.0",
+  "description": "Attendance and Salary Calculator Mobile Web App",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run start --prefix backend\"",
+    "install-all": "npm install --prefix backend && npm install --prefix frontend --legacy-peer-deps && npm install --legacy-peer-deps",
+    "start-backend": "npm run start --prefix backend",
+    "start-frontend": "npm run dev --prefix frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
